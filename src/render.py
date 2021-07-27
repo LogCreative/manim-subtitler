@@ -15,7 +15,7 @@ class SubLine:
 subLines = [
     SubLine("Hello, world!",1,1,1,1),
     SubLine("LogCreative",1,1,1,1),
-    SubLine("2021 $A$ \(A\)",1,1,1,1)
+    SubLine("2021 $A$  \(A\)",1,1,1,1)
 ]
 
 class DisplayLines(Scene):
@@ -25,43 +25,36 @@ class DisplayLines(Scene):
         # use JSON for transmission.
         for subLine in subLines:
             # Read the text
-            # TODO: next_to(Mobject)
-            # TODO: wait
-            
-            # TODO: replace \(.+\) to $.+$ using re
+
             subLine.caption = subLine.caption.replace("\\(","$").replace("\\)","$")
-            
+            # avoid bug: space between TexObject
+            subLine.caption = re.sub("\$\s+\$","$$",subLine.caption)
+            # compose Text and Tex
             captionList = []
             stack_str = ""
             in_equation = False
-            prev = ""
             for c in subLine.caption:
                 if c=='$':
                     if not in_equation:
-                        cur = Text(stack_str)
+                        captionList.append(Text(stack_str))
                     else:
-                        cur = Tex(stack_str)                        
-                    if not prev=="":
-                        cur.next_to(prev)
-                    captionList.append(cur)
-                    prev = cur
-                    in_equation != in_equation
+                        captionList.append(Tex(stack_str))
+                    stack_str = ""
+                    in_equation = not in_equation
                 else:
                     stack_str += c
             if stack_str != "":
-                cur = Text(stack_str)
-                if not prev=="":
-                    cur.next_to(prev)
-                captionList.append(cur)
+                captionList.append(Text(stack_str))
+
+            line = VGroup(*captionList)
+            line.arrange()
             
             # Fade In animation
-            for el in captionList:
-                self.play(FadeIn(el), run_time=subLine.fadeIn)
+            self.play(FadeIn(line), run_time=subLine.fadeIn)
             # Hold for some while
             self.wait(subLine.duration)
             # Fade Out animation
-            for el in captionList:
-                self.play(FadeOut(el), run_time=subLine.fadeOut)
+            self.play(FadeOut(line), run_time=subLine.fadeOut)
             # Space after this line
             self.wait(subLine.space)
 
