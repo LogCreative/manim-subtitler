@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manim Subtitler</title>
+</head>
+<body>
+    <div>
+        输入 srt 字幕文件 <input type="file" id="subFile">
+    </div>
+    <div>
+        输出 py 编程文档
+    </div>
+    
+</body>
+<script>
+    document.getElementById('subFile').addEventListener('change', function(){
+        // 输入 srt 字幕文件
+
+        // 按照 \n\n 分割
+
+        // srt 字幕块的格式
+        // \d+\n
+        // \d\d:\d\d:\d\d,\d\d\d --> \d\d:\d\d:\d\d,\d\d\d
+        // [\s\S]+
+
+        // 如果文字里有 $ $ 或者是 \( \)
+        // 则转换为 TeX 对象
+        // 该项可以设置 或者是全局 Tex 对象
+        
+        // 需要思考文本格式
+    });
+</script>
+</html>
