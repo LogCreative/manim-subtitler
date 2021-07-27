@@ -1,3 +1,5 @@
+FONT_SIZE = 30
+
 import re
 from manimlib import *
 from numpy import empty
@@ -21,8 +23,11 @@ subLines = [
 class DisplayLines(Scene):
     def construct(self):
         # Read line from csv
-        # If it is an online version,
+        # TODO: If it is an online version,
         # use JSON for transmission.
+
+        
+
         for subLine in subLines:
             # Read the text
 
@@ -36,7 +41,7 @@ class DisplayLines(Scene):
             for c in subLine.caption:
                 if c=='$':
                     if not in_equation:
-                        captionList.append(Text(stack_str))
+                        captionList.append(Text(stack_str, font_size = FONT_SIZE))
                     else:
                         captionList.append(Tex(stack_str))
                     stack_str = ""
@@ -44,7 +49,7 @@ class DisplayLines(Scene):
                 else:
                     stack_str += c
             if stack_str != "":
-                captionList.append(Text(stack_str))
+                captionList.append(Text(stack_str, font_size=FONT_SIZE))
 
             line = VGroup(*captionList)
             line.arrange()
