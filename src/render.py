@@ -5,12 +5,12 @@ import csv
 from manimlib import *
 
 class SubLine:
-    def __init__(self, caption, fadeIn, duration, fadeOut, space):
+    def __init__(self, caption, space, fadeIn, duration, fadeOut):
         self.caption = caption
+        self.space = space
         self.fadeIn = fadeIn
         self.duration = duration
         self.fadeOut = fadeOut
-        self.space = space
 
     # Overlapping is not allowed.
 
@@ -19,7 +19,7 @@ class DisplayLines(Scene):
         # Read line from csv
         # TODO: If it is an online version,
         # use JSON for transmission.
-        with open("subtitle.csv") as f:
+        with open("subtitle.csv","r",encoding="UTF-8") as f:
             reader = csv.reader(f)
             for row in reader:
                 # Read the text
@@ -35,7 +35,7 @@ class DisplayLines(Scene):
                 for c in subLine.caption:
                     if c=='$':
                         if not in_equation:
-                            captionList.append(Text(stack_str, font_size = FONT_SIZE))
+                            captionList.append(Text(stack_str, font_size = FONT_SIZE, font="Simhei"))
                         else:
                             captionList.append(Tex(stack_str))
                         stack_str = ""
@@ -43,19 +43,19 @@ class DisplayLines(Scene):
                     else:
                         stack_str += c
                 if stack_str != "":
-                    captionList.append(Text(stack_str, font_size=FONT_SIZE))
+                    captionList.append(Text(stack_str, font_size=FONT_SIZE, font="Simhei"))
 
                 line = VGroup(*captionList)
                 line.arrange()
                 
+                # Space before this line
+                self.wait(subLine.space)
                 # Fade In animation
                 self.play(FadeIn(line), run_time=subLine.fadeIn)
                 # Hold for some while
                 self.wait(subLine.duration)
                 # Fade Out animation
                 self.play(FadeOut(line), run_time=subLine.fadeOut)
-                # Space after this line
-                self.wait(subLine.space)
 
 if __name__=="__main__":
     DisplayLines()
