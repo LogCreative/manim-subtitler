@@ -41,8 +41,6 @@ class DisplayLines(Scene):
                         if not in_equation:
                             captionList.append(Text(stack_str, font_size = FONT_SIZE, font="Simhei"))
                         else:
-                            # TODO: tempory fix on \text
-                            stack_str = re.sub("\\text\{(.+)\}","{\\rm $1}",stack_str)
                             captionList.append(Tex(stack_str))
                         stack_str = ""
                         in_equation = not in_equation

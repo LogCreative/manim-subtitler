@@ -1,6 +1,8 @@
 # manim-subtitler
 A LaTeX subtitler with the support of manim.
 
+> If you want an open-and-use experience, please fork this repo and replace the content of `test/main.srt` to your exported subtitle. After the commit, you could check Actions->[The latest action]->Artifacts to get your subtitle video!
+
 ## Install manim
 
 Check out [manim](https://github.com/3b1b/manim) webpage to learn how to install manim.
@@ -10,12 +12,12 @@ The easiest way could be
 pip install manimgl
 ```
 
-## Parse Subtitle
+## Parse subtitle
 
 run in command line:
 ```
 cd src
-python parser.py [path to subtitle.srt]
+python parser.py path/to/subtitle.srt
 ```
 
 ## Render the animation
