@@ -1,3 +1,7 @@
+# MIT License
+# 
+# Copyright (c) 2021 LogCreative
+
 import re
 import datetime
 import sys
