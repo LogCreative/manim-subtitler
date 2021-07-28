@@ -1,5 +1,7 @@
 import re
 import datetime
+import sys
+from sys import getsizeof
 
 # ---|----     ---|---
 
@@ -48,10 +50,20 @@ class Parser:
         def second_time(second):
             return datetime.time(second=int(second),microsecond=int((second - int(second))*1000))
 
+        def get_second(t):
+            return t.hour * 3600 + t.minute * 60 + t.second + t.microsecond / 1000
+
         def diff_second(f, e):
-            fs = f.hour * 3600 + f.minute * 60 + f.second + f.microsecond / 1000
-            es = e.hour * 3600 + e.minute * 60 + e.second + e.microsecond / 1000
+            fs = get_second(f)
+            es = get_second(e)
             return fs - es
+
+        def add_second(t, s):
+            ts = get_second(t)
+            ts += s
+            tsn = int(ts)
+            tsm = int((ts - tsn) * 1000)
+            return datetime.time(int(tsn / 3600), int(tsn / 60), tsn % 60, tsm)
 
         with open(fileOut, 'w', encoding='UTF-8') as f:
             prev = datetime.time(0,0,0,0)
@@ -63,13 +75,13 @@ class Parser:
                     duration = diff_second(srtLine.end, prev)
                     if fadeIn<0:
                         fadeIn = 0
-                        duration -= FADEOUT
+                        duration -= FADEOUT / 2.0
                     else:
-                        duration -= FADEOUT + fadeIn
+                        duration -= FADEOUT / 2.0 + fadeIn
                     space = 0
                 else:
-                    duration = diff_second(srtLine.end, srtLine.start) - FADEOUT - FADEIN / 2.0
-                prev = srtLine.end
+                    duration = diff_second(srtLine.end, srtLine.start) - FADEOUT / 2.0 - FADEIN / 2.0
+                prev = add_second(srtLine.end, FADEOUT / 2.0)
                 f.write("\"" + srtLine.caption.replace("\n"," ") + "\"," + str(space) + "," + str(fadeIn) + "," + str(duration) + "," + str(FADEOUT) + "\n")
 
     def output(self, fileOut):
@@ -79,6 +91,9 @@ class Parser:
         
 
 if __name__=="__main__":
-    filePath = input("Input the subtitle file path (.srt): ")
+    if len(sys.argv) < 2:
+        filePath = input("Input the subtitle file path (.srt): ")
+    else:
+        filePath = sys.argv[1]
     p = Parser(filePath)
     p.output("subtitle.csv")
