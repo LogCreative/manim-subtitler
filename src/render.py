@@ -19,8 +19,7 @@ class DisplayLines(Scene):
         # Read line from csv
         # TODO: If it is an online version,
         # use JSON for transmission.
-        f = open("subtitle.csv")
-        with f:
+        with open("subtitle.csv") as f:
             reader = csv.reader(f)
             for row in reader:
                 # Read the text

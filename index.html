@@ -11,26 +11,51 @@
         输入 srt 字幕文件 <input type="file" id="subFile">
     </div>
     <div>
-        输出 py 编程文档
+        输出 csv 字幕接口
     </div>
     
 </body>
 <script>
-    document.getElementById('subFile').addEventListener('change', function(){
+    document.getElementById('subFile').addEventListener('change', function(e){
         // 输入 srt 字幕文件
+        var srtFile = e.target.files[0];
+        if (!srtFile) return;
+        var reader = new FileReader();
+        reader.readAsText(srtFile);
+        reader.onload = function() {
+            // CRLF -> LF
+            file_content = this.result.replace(/\r\n/g,"\n");
+            // 忽略最末尾的 \n
+            file_content = file_content.substring(0, file_content.length - 1);
+            // 按照 \n\n 分割
+            srt_blocks = file_content.split("\n\n");
 
-        // 按照 \n\n 分割
+            // 待输出文件接口
+            csv_content = "";
 
-        // srt 字幕块的格式
-        // \d+\n
-        // \d\d:\d\d:\d\d,\d\d\d --> \d\d:\d\d:\d\d,\d\d\d
-        // [\s\S]+
+            fadeIn = 1;
+            fadeOut = 1;
 
-        // 如果文字里有 $ $ 或者是 \( \)
-        // 则转换为 TeX 对象
-        // 该项可以设置 或者是全局 Tex 对象
-        
-        // 需要思考文本格式
+            // srt 字幕块的格式
+            // \d+\n
+            // \d\d:\d\d:\d\d,\d\d\d --> \d\d:\d\d:\d\d,\d\d\d
+            // [\s\S]+
+            for (i in srt_blocks) {
+                block = srt_blocks[i];
+                timeId = /\d+\n(\d\d):(\d\d):(\d\d),(\d\d\d) --> (\d\d):(\d\d):(\d\d),(\d\d\d)/gm.exec(block);
+                // 找到文段的最开始位置, +1 是 \n
+                caption = block.substring(timeId.index + timeId[0].length + 1, block.length)
+                // 需要计算 duration 和 space
+                csv_content += '\"' + caption + "\"," + fadeIn + ',' + /* duration */ + fadeOut + /* space */;
+            }
+
+            // TODO:
+            // 如果文字里有 $ $ 或者是 \( \)
+            // 则转换为 TeX 对象
+            // 该项可以设置 或者是全局 Tex 对象
+            
+            // 需要思考文本格式
+        }
     });
 </script>
 </html>
