@@ -26,4 +26,13 @@ manimgl render.py -w
 ```
 You can change the output path to the video in `custom_config.yml`.
 
-![](src/videos/DisplayLines.mp4)
+## Customization
+
+The customization work will be implemented by a HTML file. In this stage, you could try to change to different animation in `render.py`. Read [manim documentation](https://docs.manim.org.cn/animation/index.html) for details.
+
+About the subtitle `.srt` file. In the current stage, the overlapping of text blocks is not allowed. You can output the subtitle file from Premiere 2021 directly in order to match your video.
+
+```
+MIT License
+(c) LogCreative 2021
+```
