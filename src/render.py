@@ -2,8 +2,6 @@
 # 
 # Copyright (c) 2021 LogCreative
 
-FONT_SIZE = 30
-
 import re
 import csv
 from manimlib import *
@@ -39,7 +37,7 @@ class DisplayLines(Scene):
                 for c in subLine.caption:
                     if c=='$':
                         if not in_equation:
-                            captionList.append(Text(stack_str, font_size = FONT_SIZE, font="Simhei"))
+                            captionList.append(Text(stack_str,  font="Simhei"))
                         else:
                             captionList.append(Tex(stack_str))
                         stack_str = ""
@@ -47,7 +45,7 @@ class DisplayLines(Scene):
                     else:
                         stack_str += c
                 if stack_str != "":
-                    captionList.append(Text(stack_str, font_size=FONT_SIZE, font="Simhei"))
+                    captionList.append(Text(stack_str,  font="Simhei"))
 
                 line = VGroup(*captionList)
                 line.arrange()

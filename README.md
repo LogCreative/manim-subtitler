@@ -5,7 +5,7 @@ A LaTeX subtitler with the support of manim.
 
 ## Install manim
 
-Check out [manim](https://github.com/3b1b/manim) webpage to learn how to install manim.
+Check out [manim](https://github.com/3b1b/manim) webpage to learn how to install manim. Please install the newest version of manim (1.1.0).
 
 The easiest way could be
 ```
