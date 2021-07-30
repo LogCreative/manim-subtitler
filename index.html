@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manim Subtitler</title>
+</head>
+<body">
+    <!-- 输入中间文件 -->
+    <input type="file" id="csvFile"><br>
+    <!-- 通过用户界面的调整 -->
+    <canvas id="subBlocks" width="1000px">
+        <!-- 一个可以拖拽的字幕块排列 -->
+        <!-- 音频波形，对比视频 -->
+        <!-- 对淡入淡出进行微调 -->
+    </canvas>
+    <!-- 输出调整后的字幕中间文件 -->
+    <!-- a link -->
+</body>
+<script>
+    document.getElementById('csvFile').addEventListener('change', function(e){
+        var csvFile = e.target.files[0];
+        if (!csvFile) return ;
+        var reader = new FileReader();
+        reader.readAsText(csvFile);
+        reader.onload = function() {
+            var canvas = document.getElementById('subBlocks');
+            if (!canvas.getContext) return;
+            var ctx = canvas.getContext('2d');
+            file_content = this.result;
+            var rows = file_content.trim().split("\n")
+            var prev = 0;
+            for (index in rows){
+                var row = rows[index].trim();
+                var items = row.split(',');
+
+                var RATIO = 32;
+
+                var space = items[1]*RATIO;
+                var fadeIn = items[2]*RATIO;
+                var duration = items[3]*RATIO;
+                var fadeOut = items[4]*RATIO;
+                
+                var fadeInBegin = prev + space;
+                var fadeInGrad = ctx.createLinearGradient(fadeInBegin,0,fadeInBegin+fadeIn,0);
+                fadeInGrad.addColorStop(0, 'white');
+                fadeInGrad.addColorStop(1, 'blue');
+                ctx.fillStyle = fadeInGrad;
+                ctx.fillRect(fadeInBegin,0, fadeIn, 20);
+
+                ctx.fillStyle = 'blue';
+                ctx.fillRect(fadeInBegin+fadeIn,0, duration, 20);
+                ctx.fillStyle = 'white'
+                ctx.fillText(items[0],fadeInBegin+fadeIn,10);
+
+                var fadeOutGrad = ctx.createLinearGradient(fadeInBegin+fadeIn+duration,0,fadeInBegin+fadeIn+duration+fadeOut,0);
+                fadeOutGrad.addColorStop(0, 'blue');
+                fadeOutGrad.addColorStop(1, 'white');
+                ctx.fillStyle = fadeOutGrad;
+                ctx.fillRect(fadeInBegin+fadeIn+duration, 0, fadeOut, 20);
+
+                prev = fadeInBegin+fadeIn+duration+fadeOut;
+            }
+        }
+    });
+</script>
+</html>
