@@ -5,7 +5,6 @@
 import re
 import datetime
 import sys
-from sys import getsizeof
 
 # ---|----     ---|---
 

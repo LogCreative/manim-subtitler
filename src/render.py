@@ -54,12 +54,12 @@ class DisplayLines(Scene):
                 self.wait(subLine.space)
                 # Fade In animation
                 # TODO: You can change to other effects 
-                self.play(FadeIn(line), run_time=subLine.fadeIn)
+                self.play(DrawBorderThenFill(line), run_time=subLine.fadeIn)
                 # Hold for some while
                 self.wait(subLine.duration)
                 # Fade Out animation
                 # TODO: You can change to other effects
-                self.play(FadeOut(line), run_time=subLine.fadeOut)
+                self.play(Uncreate(line), run_time=subLine.fadeOut)
 
 if __name__=="__main__":
     DisplayLines()
