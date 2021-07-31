@@ -5,7 +5,6 @@
 import re
 import datetime
 import sys
-from sys import getsizeof
 
 # ---|----     ---|---
 
@@ -71,7 +70,7 @@ class Parser:
 
         with open(fileOut, 'w', encoding='UTF-8') as f:
             prev = datetime.time(0,0,0,0)
-            for srtLine in self.srtLines:
+            for i,srtLine in enumerate(self.srtLines):
                 fadeIn = FADEIN
                 space = diff_second(srtLine.start, prev) - FADEIN / 2.0
                 if space<0:
@@ -82,7 +81,19 @@ class Parser:
                         duration -= FADEOUT / 2.0
                     else:
                         duration -= FADEOUT / 2.0 + fadeIn
-                    space = 0
+                    if i>0 and self.srtLines[i-1].end == srtLine.start:
+                        # When the beginning of the this line
+                        # is the same as the end of prev line
+                        # then the special effect of
+                        # ReplacementTransform
+                        # will be applied between the two lines
+                        #
+                        # ---|---                ---|---
+                        #  --|--  (FADEIN)  =>   ---|--- (FADEOUT)
+                        space = - FADEOUT
+                        duration = diff_second(srtLine.end, self.srtLines[i-1].end) - FADEOUT
+                    else:
+                        space = 0
                 else:
                     duration = diff_second(srtLine.end, srtLine.start) - FADEOUT / 2.0 - FADEIN / 2.0
                 prev = add_second(srtLine.end, FADEOUT / 2.0)
