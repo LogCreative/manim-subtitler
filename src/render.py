@@ -23,6 +23,7 @@ class DisplayLines(Scene):
         # use JSON for transmission.
         with open("subtitle.csv","r",encoding="UTF-8") as f:
             reader = csv.reader(f)
+            subLines = []
             for row in reader:
                 # Read the text
                 subLine = SubLine(row[0], float(row[1]), float(row[2]), float(row[3]), float(row[4]))
@@ -46,20 +47,36 @@ class DisplayLines(Scene):
                         stack_str += c
                 if stack_str != "":
                     captionList.append(Text(stack_str,  font="Simhei"))
+                lineGroup = VGroup(*captionList)
+                lineGroup.arrange()
+                subLines.append([subLine, lineGroup])
 
-                line = VGroup(*captionList)
-                line.arrange()
+            for i,line in enumerate(subLines):
+                subLine = line[0]
+                lineGroup = line[1]
                 
-                # Space before this line
-                self.wait(subLine.space)
-                # Fade In animation
-                # TODO: You can change to other effects 
-                self.play(DrawBorderThenFill(line), run_time=subLine.fadeIn)
+                # If the space is smaller than 0
+                # the line has been fadeIn already
+                if subLine.space>=0:
+                    # Space before this line
+                    self.wait(subLine.space)
+                    # Fade In animation
+                    # TODO: You can change to other effects 
+                    self.play(DrawBorderThenFill(lineGroup), run_time=subLine.fadeIn)
+                
                 # Hold for some while
                 self.wait(subLine.duration)
-                # Fade Out animation
-                # TODO: You can change to other effects
-                self.play(Uncreate(line), run_time=subLine.fadeOut)
+
+                if i+1<len(subLines) and subLines[i+1][0].space < 0:
+                    # load the next line
+                    nextLine = subLines[i+1][0]
+                    nextLineGroup = subLines[i+1][1]
+                    # play the transformation animation between two lines
+                    self.play(ReplacementTransform(lineGroup, nextLineGroup), run_time=subLine.fadeOut)
+                else:
+                    # Fade Out animation
+                    # TODO: You can change to other effects
+                    self.play(Uncreate(lineGroup), run_time=subLine.fadeOut)
 
 if __name__=="__main__":
     DisplayLines()
