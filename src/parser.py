@@ -97,7 +97,7 @@ class Parser:
                 else:
                     duration = diff_second(srtLine.end, srtLine.start) - FADEOUT / 2.0 - FADEIN / 2.0
                 prev = add_second(srtLine.end, FADEOUT / 2.0)
-                f.write("\"" + srtLine.caption.replace("\n"," ") + "\"," + str(space) + "," + str(fadeIn) + "," + str(duration) + "," + str(FADEOUT) + "\n")
+                f.write("\"" + srtLine.caption + "\"," + str(space) + "," + str(fadeIn) + "," + str(duration) + "," + str(FADEOUT) + "\n")
 
     def output(self, fileOut):
         self.split_block()
